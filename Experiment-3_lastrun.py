@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2022.2.4),
-    on September 14, 2022, at 10:06
+    on September 28, 2022, at 22:39
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -54,7 +54,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
-    originPath='C:\\Users\\Hp\\OneDrive\\Desktop\\Experiment-3_lastrun.py',
+    originPath='C:\\Users\\spong\\OneDrive\\Desktop\\Experiment-3_lastrun.py',
     savePickle=True, saveWideText=True,
     dataFileName=filename)
 # save a log file for detail verbose info
@@ -96,40 +96,29 @@ eyetracker = None
 defaultKeyboard = keyboard.Keyboard(backend='iohub')
 
 # --- Initialize components for Routine "trial" ---
-Fixation = visual.ShapeStim(
-    win=win, name='Fixation', vertices='cross',units='pix', 
-    size=(10, 10),
+fixation = visual.ShapeStim(
+    win=win, name='fixation', vertices='cross',
+    size=(0.1, 0.1),
     ori=0.0, pos=(0, 0), anchor='center',
     lineWidth=1.0,     colorSpace='rgb',  lineColor='white', fillColor='white',
     opacity=None, depth=0.0, interpolate=True)
-grating = visual.GratingStim(
-    win=win, name='grating',
-    tex='sin', mask='gauss', anchor='center',
-    ori=1.0, pos=(0, 0), size=(0.2, 0.2), sf=5.0, phase=0.0,
-    color=[1,1,1], colorSpace='rgb',
-    opacity=None, contrast=0.3, blendmode='avg',
-    texRes=128.0, interpolate=True, depth=-1.0)
-key_resp = keyboard.Keyboard()
-# Run 'Begin Experiment' code from code
-
-if random() > 0.5:
-    tilt = 0;
-    corrAns = 'up'
-else:
-    
-    if random() > 0.5:
-        tilt = randint(1,5)
-        corrAns = 'down'
-    else:
-        tilt = randint(-5,-1)
-        corrAns = 'down'
+target = visual.TextStim(win=win, name='target',
+    text='T',
+    font='Open Sans',
+    pos=[0,0], height=0.05, wrapWidth=None, ori=0.0, 
+    color='white', colorSpace='rgb', opacity=None, 
+    languageStyle='LTR',
+    depth=-1.0);
+mouse = event.Mouse(win=win)
+x, y = [None, None]
+mouse.mouseClock = core.Clock()
 
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.Clock()  # to track time remaining of each (possibly non-slip) routine 
 
 # set up handler to look after randomisation of conditions etc
-trials = data.TrialHandler(nReps=100.0, method='random', 
+trials = data.TrialHandler(nReps=5.0, method='random', 
     extraInfo=expInfo, originPath=-1,
     trialList=[None],
     seed=None, name='trials')
@@ -151,12 +140,43 @@ for thisTrial in trials:
     continueRoutine = True
     routineForceEnded = False
     # update component parameters for each repeat
-    grating.setOri(tilt)
-    key_resp.keys = []
-    key_resp.rt = []
-    _key_resp_allKeys = []
+    target.setPos((random()-0.5, random()-0.5))
+    # Run 'Begin Routine' code from code
+    if random() > 0.5:
+        num_distr = 10
+        thisExp.addData('num_distr', num_distr)
+    else:
+        num_distr = 5
+        thisExp.addData('num_distr', num_distr)
+    distractors = []
+    
+    for i in range(num_distr):
+    
+        distr = visual.TextStim(win=win, name='distr',
+            text='L',
+            font='Open Sans',
+            pos=(random()-0.5, random()-0.5), height=0.1, wrapWidth=None, ori=randint(0,360), 
+            color='white', colorSpace='rgb', opacity=None, 
+            languageStyle='LTR',
+            depth=0.0);
+            
+        distractors.append(distr)
+        
+        
+    for distr in distractors:
+        distr.setAutoDraw(True)
+    # setup some python lists for storing info about the mouse
+    mouse.x = []
+    mouse.y = []
+    mouse.leftButton = []
+    mouse.midButton = []
+    mouse.rightButton = []
+    mouse.time = []
+    mouse.clicked_name = []
+    gotValidClick = False  # until a click is received
+    mouse.mouseClock.reset()
     # keep track of which components have finished
-    trialComponents = [Fixation, grating, key_resp]
+    trialComponents = [fixation, target, mouse]
     for thisComponent in trialComponents:
         thisComponent.tStart = None
         thisComponent.tStop = None
@@ -178,70 +198,64 @@ for thisTrial in trials:
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
         # update/draw components on each frame
         
-        # *Fixation* updates
-        if Fixation.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+        # *fixation* updates
+        if fixation.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
             # keep track of start time/frame for later
-            Fixation.frameNStart = frameN  # exact frame index
-            Fixation.tStart = t  # local t and not account for scr refresh
-            Fixation.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(Fixation, 'tStartRefresh')  # time at next scr refresh
+            fixation.frameNStart = frameN  # exact frame index
+            fixation.tStart = t  # local t and not account for scr refresh
+            fixation.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(fixation, 'tStartRefresh')  # time at next scr refresh
             # add timestamp to datafile
-            thisExp.timestampOnFlip(win, 'Fixation.started')
-            Fixation.setAutoDraw(True)
-        if Fixation.status == STARTED:
-            # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > Fixation.tStartRefresh + 1.0-frameTolerance:
-                # keep track of stop time/frame for later
-                Fixation.tStop = t  # not accounting for scr refresh
-                Fixation.frameNStop = frameN  # exact frame index
-                # add timestamp to datafile
-                thisExp.timestampOnFlip(win, 'Fixation.stopped')
-                Fixation.setAutoDraw(False)
+            thisExp.timestampOnFlip(win, 'fixation.started')
+            fixation.setAutoDraw(True)
         
-        # *grating* updates
-        if grating.status == NOT_STARTED and tThisFlip >= 1.0-frameTolerance:
+        # *target* updates
+        if target.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
             # keep track of start time/frame for later
-            grating.frameNStart = frameN  # exact frame index
-            grating.tStart = t  # local t and not account for scr refresh
-            grating.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(grating, 'tStartRefresh')  # time at next scr refresh
-            grating.setAutoDraw(True)
-        if grating.status == STARTED:
-            # is it time to stop? (based on global clock, using actual start)
-            if tThisFlipGlobal > grating.tStartRefresh + 0.3-frameTolerance:
-                # keep track of stop time/frame for later
-                grating.tStop = t  # not accounting for scr refresh
-                grating.frameNStop = frameN  # exact frame index
-                grating.setAutoDraw(False)
-        
-        # *key_resp* updates
-        waitOnFlip = False
-        if key_resp.status == NOT_STARTED and tThisFlip >= 1.0-frameTolerance:
-            # keep track of start time/frame for later
-            key_resp.frameNStart = frameN  # exact frame index
-            key_resp.tStart = t  # local t and not account for scr refresh
-            key_resp.tStartRefresh = tThisFlipGlobal  # on global time
-            win.timeOnFlip(key_resp, 'tStartRefresh')  # time at next scr refresh
+            target.frameNStart = frameN  # exact frame index
+            target.tStart = t  # local t and not account for scr refresh
+            target.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(target, 'tStartRefresh')  # time at next scr refresh
             # add timestamp to datafile
-            thisExp.timestampOnFlip(win, 'key_resp.started')
-            key_resp.status = STARTED
-            # keyboard checking is just starting
-            waitOnFlip = True
-            win.callOnFlip(key_resp.clock.reset)  # t=0 on next screen flip
-            win.callOnFlip(key_resp.clearEvents, eventType='keyboard')  # clear events on next screen flip
-        if key_resp.status == STARTED and not waitOnFlip:
-            theseKeys = key_resp.getKeys(keyList=['up', 'down'], waitRelease=False)
-            _key_resp_allKeys.extend(theseKeys)
-            if len(_key_resp_allKeys):
-                key_resp.keys = _key_resp_allKeys[-1].name  # just the last key pressed
-                key_resp.rt = _key_resp_allKeys[-1].rt
-                # was this correct?
-                if (key_resp.keys == str(corrAns)) or (key_resp.keys == corrAns):
-                    key_resp.corr = 1
-                else:
-                    key_resp.corr = 0
-                # a response ends the routine
-                continueRoutine = False
+            thisExp.timestampOnFlip(win, 'target.started')
+            target.setAutoDraw(True)
+        # *mouse* updates
+        if mouse.status == NOT_STARTED and t >= 0.0-frameTolerance:
+            # keep track of start time/frame for later
+            mouse.frameNStart = frameN  # exact frame index
+            mouse.tStart = t  # local t and not account for scr refresh
+            mouse.tStartRefresh = tThisFlipGlobal  # on global time
+            win.timeOnFlip(mouse, 'tStartRefresh')  # time at next scr refresh
+            # add timestamp to datafile
+            thisExp.addData('mouse.started', t)
+            mouse.status = STARTED
+            prevButtonState = mouse.getPressed()  # if button is down already this ISN'T a new click
+        if mouse.status == STARTED:  # only update if started and not finished!
+            buttons = mouse.getPressed()
+            if buttons != prevButtonState:  # button state changed?
+                prevButtonState = buttons
+                if sum(buttons) > 0:  # state changed to a new click
+                    # check if the mouse was inside our 'clickable' objects
+                    gotValidClick = False
+                    try:
+                        iter(target)
+                        clickableList = target
+                    except:
+                        clickableList = [target]
+                    for obj in clickableList:
+                        if obj.contains(mouse):
+                            gotValidClick = True
+                            mouse.clicked_name.append(obj.name)
+                    x, y = mouse.getPos()
+                    mouse.x.append(x)
+                    mouse.y.append(y)
+                    buttons = mouse.getPressed()
+                    mouse.leftButton.append(buttons[0])
+                    mouse.midButton.append(buttons[1])
+                    mouse.rightButton.append(buttons[2])
+                    mouse.time.append(mouse.mouseClock.getTime())
+                    
+                    continueRoutine = False  # abort routine on response
         
         # check for quit (typically the Esc key)
         if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
@@ -265,38 +279,22 @@ for thisTrial in trials:
     for thisComponent in trialComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-    # check responses
-    if key_resp.keys in ['', [], None]:  # No response was made
-        key_resp.keys = None
-        # was no response the correct answer?!
-        if str(corrAns).lower() == 'none':
-           key_resp.corr = 1;  # correct non-response
-        else:
-           key_resp.corr = 0;  # failed to respond (incorrectly)
-    # store data for trials (TrialHandler)
-    trials.addData('key_resp.keys',key_resp.keys)
-    trials.addData('key_resp.corr', key_resp.corr)
-    if key_resp.keys != None:  # we had a response
-        trials.addData('key_resp.rt', key_resp.rt)
     # Run 'End Routine' code from code
-    trials.addData('tilt',tilt)
-    
-    if random() > 0.5:
-        tilt = 0;
-        corrAns = 'up'
-    else:
-        
-        if random() > 0.5:
-            tilt = randint(1,5)
-            corrAns = 'down'
-        else:
-            tilt = randint(-5,-1)
-            corrAns = 'down'
+    for distr in distractors:
+        distr.setAutoDraw(False)
+    # store data for trials (TrialHandler)
+    trials.addData('mouse.x', mouse.x)
+    trials.addData('mouse.y', mouse.y)
+    trials.addData('mouse.leftButton', mouse.leftButton)
+    trials.addData('mouse.midButton', mouse.midButton)
+    trials.addData('mouse.rightButton', mouse.rightButton)
+    trials.addData('mouse.time', mouse.time)
+    trials.addData('mouse.clicked_name', mouse.clicked_name)
     # the Routine "trial" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset()
     thisExp.nextEntry()
     
-# completed 100.0 repeats of 'trials'
+# completed 5.0 repeats of 'trials'
 
 
 # --- End experiment ---
